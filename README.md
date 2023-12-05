@@ -1,8 +1,8 @@
 # Introductie
 Campus Recruitment Inc. wants to build a dashboard based on internal data, enriched by 
-open source data from Dienst Uitvoering Onderwijs (DUO). This codebase exists of an ETL 
+open source data from Dienst Uitvoering Onderwijs (DUO). This codebase consists of an ETL 
 application that will provide the data in Parquet format to the datawarehouse of Campus 
-Recruitment.
+Recruitment. 
 
 # Prerequisites
 - poetry package manager
