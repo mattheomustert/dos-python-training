@@ -5,7 +5,7 @@ DWHBase = declarative_base()
 
 
 class DimemsieDatum(DWHBase):
-    __table_name__ = "dim_datum"
+    __tablename__ = "dim_datum"
 
     datum_id = Column(Integer, name="datumId", primary_key=True, nullable=False)
     jaar = Column(Integer, name="jaar")
@@ -14,7 +14,7 @@ class DimemsieDatum(DWHBase):
 
 
 class DimensieStudent(DWHBase):
-    __table_name__ = "dim_student"
+    __tablename__ = "dim_student"
 
     student_id = Column(Integer, name="studentId", primary_key=True, nullable=False)
     geslacht = Column(String, name="geslacht")
@@ -23,7 +23,7 @@ class DimensieStudent(DWHBase):
 
 
 class DimensieDiploma(DWHBase):
-    __table_name__ = "dim_diploma"
+    __tablename__ = "dim_diploma"
 
     diploma_id = Column(Integer, name="diplomaId", primary_key=True, nullable=False)
     diploma_soort = Column(String, name="diplomaSoort")
@@ -32,7 +32,7 @@ class DimensieDiploma(DWHBase):
 
 
 class DimensieOpleiding(DWHBase):
-    __table_name__ = "dim_opleiding"
+    __tablename__ = "dim_opleiding"
 
     opleiding_id = Column(Integer, name="opleidingId", primary_key=True, nullable=False)
     opleidings_code = Column(Integer, name="opleidingsCode")
@@ -46,9 +46,9 @@ class DimensieOpleiding(DWHBase):
 
 
 class DimensieOnderwijsinstelling(DWHBase):
-    __table_name__ = "dim_onderwijsinstelling"
+    __tablename__ = "dim_onderwijsinstelling"
 
-    onderwijsinstellings_id = Column(Integer, name="onderwijsInstellingsId", primary_key=True, nullable=False)
+    onderwijsinstellings_id = Column(Integer, name="onderwijsInstellingId", primary_key=True, nullable=False)
     instellingsnaam_actueel = Column(String, name="instellingsnaamActueel")
     provincie = Column(String, name="provincie")
     gemeente_naam = Column(String, name="gemeenteNaam")
@@ -61,25 +61,25 @@ class DimensieOnderwijsinstelling(DWHBase):
 
 
 class FeitStudentStudeertAfAanOnderwijsInstelling(DWHBase):
-    __table_name__ = "feit_student_studeert_af_aan_onderwijsinstelling"
+    __tablename__ = "feit_student_studeert_af_aan_onderwijsinstelling"
 
     id = Column(Integer, name="id", primary_key=True, nullable=False)
 
-    datum_id = Column(Integer, ForeignKey("DimensieDatum.datumId"), name="datumId", nullable=False)
+    datum_id = Column(Integer, ForeignKey("dim_datum.datumId"), name="datumId", nullable=False)
     datum = relationship("dim_datum", back_populates="datums")
 
-    onderwijsinstelling_id = Column(Integer, ForeignKey("DimensieOnderwijsinstelling.onderwijsinstelling_id"),
+    onderwijsinstelling_id = Column(Integer, ForeignKey("dim_onderwijsinstelling.onderwijsInstellingId"),
                                     name="onderwijsinstellingId", nullable=False)
     onderwijsinstelling = relationship("DimensieOnderwijsinstelling", back_populates="onderwijsinstellingen")
 
-    student_id = Column(Integer, ForeignKey("DimensieStudent.studenId"), name="studentId", nullable=False)
+    student_id = Column(Integer, ForeignKey("dim_student.studentId"), name="studentId", nullable=False)
     student = relationship("DimensieStudent", back_populates="studenten")
 
-    opleiding_id = Column(Integer, ForeignKey("DimensieOpleiding.opleidingId"),
+    opleiding_id = Column(Integer, ForeignKey("dim_opleiding.opleidingId"),
                           name="opleidingId", nullable=False)
     opleiding = relationship("DimensieOpleiding", back_populates="opleidingen")
 
-    diploma_id = Column(Integer, ForeignKey("DimensieDiploma.diplomaId"), name="dimplomaId", nullable=False)
+    diploma_id = Column(Integer, ForeignKey("dim_diploma.diplomaId"), name="dimplomaId", nullable=False)
     diploma = relationship("DimensieDiploma", back_populates="diplomas")
 
     aantal_afgestudeerden = Column(Integer, name="aantalAfgestudeerden")
