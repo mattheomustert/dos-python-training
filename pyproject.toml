@@ -14,6 +14,7 @@ google-cloud-storage = "^2.13.0"
 sqlalchemy = "1.4.27"
 google-cloud-bigquery-storage = "^2.24.0"
 sqlalchemy-bigquery = "^1.9.0"
+alembic = "^1.13.0"
 
 [tool.poetry.dev-dependencies]
 
