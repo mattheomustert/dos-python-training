@@ -1,5 +1,6 @@
 import io
-from abc import abstractmethod, ABCMeta
+from abc import abstractmethod
+from typing import Type
 
 import pandas as pd
 from sqlalchemy import insert
@@ -7,6 +8,7 @@ from sqlalchemy.engine import Engine
 
 from campus_recruitment_etl.models.dwh import DimensieStudent
 from campus_recruitment_etl.services.storage import GCSStorageClient
+from campus_recruitment_etl.types.repositories import DATABASE_MODELS
 
 
 class Transformable:
@@ -19,12 +21,11 @@ class DWHRepositoryBase:
     def __init__(self, bigquery_connection_engine: Engine):
         self.bigquery_connection_engine = bigquery_connection_engine
 
-    def insert_records(self, transformed_df: list[dict]):
-        # Inject whole datamodel
-        truncate_query = f"TRUNCATE TABLE {DimensieStudent.__tablename__}"
+    def insert_records(self, transformed_df: list[dict], dwh_model: Type[DATABASE_MODELS]):
+        truncate_query = f"TRUNCATE TABLE {dwh_model.__tablename__}"
         self.bigquery_connection_engine.execute(truncate_query)
 
-        insert_query = insert(DimensieStudent).values(transformed_df)
+        insert_query = insert(dwh_model).values(transformed_df)
         self.bigquery_connection_engine.execute(insert_query)
 
 
@@ -48,10 +49,10 @@ class AbstractSourceRepository:
         return df.drop_duplicates(keep="first")
 
     @staticmethod
-    def add_id_column(df: pd.DataFrame, id_column: str) -> pd.DataFrame:
+    def _add_id_column(df: pd.DataFrame, id_column: str) -> pd.DataFrame:
         df[id_column] = df.index + 1
         return df
 
     @staticmethod
-    def rename_columns(df: pd.DataFrame, columns_to_rename: dict) -> pd.DataFrame:
+    def _rename_columns(df: pd.DataFrame, columns_to_rename: dict) -> pd.DataFrame:
         return df.rename(columns=columns_to_rename)
