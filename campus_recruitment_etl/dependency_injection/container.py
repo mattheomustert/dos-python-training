@@ -26,7 +26,7 @@ class ServiceContainer(containers.DeclarativeContainer):
 
     dimension_student_repository = providers.Singleton(
         DimensieStudentSourceRepository,
-        storage_client=gcs_storage_client
+        gcs_client=gcs_storage_client
     )
 
     connection_to_bigquery = providers.Resource(
