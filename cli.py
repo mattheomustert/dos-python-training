@@ -47,8 +47,9 @@ def update_dim():
     storage_client = service_container.gcs_storage_client()
     path = service_container.config.gcs.parquet_path()
     files = storage_client.list_files(path)
+
     transformer = service_container.dimension_student_transformer(src_file_paths=files)
-    print(transformer.transform())
+    transformer.transform()
 
 
 if __name__ == '__main__':
