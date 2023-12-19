@@ -51,6 +51,9 @@ def update_dim():
     transformer = service_container.dimension_student_transformer(src_file_paths=files)
     transformer.transform()
 
+    transformer = service_container.dimension_opleiding_transformer(src_file_paths=files)
+    transformer.transform()
+
 
 if __name__ == '__main__':
     cli()

@@ -1,9 +1,13 @@
 from dependency_injector import containers, providers
 from google.cloud import storage
 from dotenv import load_dotenv
+
+from campus_recruitment_etl.repositories.dim_opleiding import DimensieOpleidingSourceRepository, \
+    DimensionOpleidingDWHRepository
 from campus_recruitment_etl.services.storage import GCSStorageClient
 from campus_recruitment_etl.repositories.dim_student import DimensieStudentSourceRepository, \
     DimensionStudentDWHRepository
+from campus_recruitment_etl.transformers.dim_opleiding import DimensionOpleidingTransformer
 from campus_recruitment_etl.transformers.dim_student import DimensionStudentTransformer
 from campus_recruitment_etl.dependency_injection.resources import ConnectionToBigQuery
 
@@ -24,14 +28,14 @@ class ServiceContainer(containers.DeclarativeContainer):
         official_client=gcs_official_client
     )
 
-    dimension_student_repository = providers.Singleton(
-        DimensieStudentSourceRepository,
-        gcs_client=gcs_storage_client
-    )
-
     connection_to_bigquery = providers.Resource(
         ConnectionToBigQuery,
         bigquery_connection_url=config.bigquery.connection_url()
+    )
+
+    dimension_student_repository = providers.Singleton(
+        DimensieStudentSourceRepository,
+        gcs_client=gcs_storage_client
     )
 
     dimension_student_dwh_repository = providers.Singleton(
@@ -45,3 +49,18 @@ class ServiceContainer(containers.DeclarativeContainer):
         dwh_repository=dimension_student_dwh_repository
     )
 
+    dimension_opleiding_repository = providers.Singleton(
+        DimensieOpleidingSourceRepository,
+        gcs_client=gcs_storage_client
+    )
+
+    dimension_opleiding_dwh_repository = providers.Singleton(
+        DimensionOpleidingDWHRepository,
+        bigquery_connection_engine=connection_to_bigquery
+    )
+
+    dimension_opleiding_transformer = providers.Factory(
+        DimensionOpleidingTransformer,
+        src_repository=dimension_opleiding_repository,
+        dwh_repository=dimension_opleiding_dwh_repository
+    )

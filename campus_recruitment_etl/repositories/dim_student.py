@@ -15,11 +15,14 @@ class DimensieStudentSourceRepository(AbstractSourceRepository):
     def get_dataframe(self, parquet_files: list[str]) -> pd.DataFrame:
         return self._get_dataframe(parquet_files=parquet_files, dim_columns=self.DIM_STUDENT_COLUMNS)
 
-    def add_student_id(self, df: pd.DataFrame) -> pd.DataFrame:
-        return self.add_id_column(df, self.STUDENT_ID_COLUMN)
+    def drop_duplicates(self, df: pd.DataFrame) -> pd.DataFrame:
+        return self._drop_duplicates(df)
 
-    def rename_student_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return self.rename_columns(df, self.STUDENT_COLUMNS_TO_RENAME)
+    def add_id_column(self, df: pd.DataFrame) -> pd.DataFrame:
+        return self._add_id_column(df, id_column=self.STUDENT_ID_COLUMN)
+
+    def rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        return self._rename_columns(df, columns_to_rename=self.STUDENT_COLUMNS_TO_RENAME)
 
 
 class DimensionStudentDWHRepository(DWHRepositoryBase):
